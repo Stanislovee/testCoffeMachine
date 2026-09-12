@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             agent any
             steps {
-                echo ' Cloning repository...'
+                echo 'Cloning repository...'
                 checkout scm
             }
         }
@@ -18,11 +18,11 @@ pipeline {
                 }
             }
             steps {
-                echo '⚙ Installing dependencies...'
+                echo ' Installing dependencies...'
                 sh 'pip install --upgrade pip'
                 sh 'pip install -r requirements.txt'
 
-                echo ' Running tests...'
+                echo '🧪 Running tests...'
                 sh 'pytest --html=report.html --self-contained-html --junitxml=test-result.xml'
             }
             post {
@@ -47,9 +47,6 @@ pipeline {
         }
         failure {
             echo ' Pipeline failed. Pls check logs!'
-        }
-        always {
-            cleanWs()
         }
     }
 }
