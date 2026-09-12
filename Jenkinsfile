@@ -1,31 +1,28 @@
 pipeline {
-    agent any
+    agent none
 
     stages {
         stage('Checkout') {
+        agent any
             steps {
                 echo 'Cloning repository...'
                 checkout scm
             }
         }
-        stage('Setup') {
+        stage('Test') {
+            agent {
+                docker {
+                image 'python:3.11'
+                args '-u root'
+                }
+            }
             steps {
                 echo 'Installing dependencies...'
-                sh '''
-                    python3 -m venv venv
-                    . venv/bin/activate
-                    pip install --upgrade pip
-                    pip install -r requirements.txt
-                '''
-            }
-        }
-        stage('Test') {
-            steps {
+                sh    'pip install --upgrade pip'
+                sh    'pip install -r requirements.txt'
+
                 echo 'Running tests...'
-                sh '''
-                    . venv/bin/activate
-                    pytest --html=report.html --self-contained-html --junitxml=test-result.xml
-                '''
+                sh 'pytest --html=report.html --self-contained-html --junitxml=test-result.xml'
             }
             post {
                 always {
