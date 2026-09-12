@@ -10,12 +10,12 @@ pipeline {
             }
         }
         stage('Test') {
-            agent {
+            agent any
                 docker {
                 image 'python:3.11'
                 args '-u root'
                 }
-            }
+
             steps {
                 echo 'Installing dependencies...'
                 sh    'pip install --upgrade pip'
